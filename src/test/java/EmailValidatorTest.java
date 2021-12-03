@@ -12,6 +12,7 @@ class EmailValidatorTest {
 
     @Test
     public void validateEmail() {
-        //Blank for now
+        String myEmail = "Email";
+        boolean isEmailValid = emailValidator.test(myEmail);
     }
 }
