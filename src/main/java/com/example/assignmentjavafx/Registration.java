@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
 
 public class Registration extends Application {
+    private final EmailValidator emailValidator = new EmailValidator();
 
     /**
      * This method creates the Stage and Scene that are used as the bottom two layers of the Registration Form.
@@ -112,7 +113,16 @@ public class Registration extends Application {
         GridPane.setHalignment(submit, HPos.CENTER);
         GridPane.setMargin(submit, new Insets(20, 0,20,0));
 
-        submit.setOnAction(event -> showRegistrationResults(Alert.AlertType.CONFIRMATION, grid.getScene().getWindow(), "", ""));
+        submit.setOnAction(event ->{
+
+            if (!emailValidator.test(emailField.getText())) {
+                showRegistrationResults(Alert.AlertType.ERROR, grid.getScene().getWindow(), "Email Error!", "Please Enter a Proper Email!");
+            }
+            else {
+                showRegistrationResults(Alert.AlertType.CONFIRMATION, grid.getScene().getWindow(), "Registration Complete!", "You have entered valid credentials");
+            }
+
+        });
     }
 
     /**
