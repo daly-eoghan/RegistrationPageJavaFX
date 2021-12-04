@@ -15,5 +15,6 @@ class PasswordValidatorTest {
     public void validatePassword() {
         String myPassword = "Email";
         boolean isPasswordValid = passwordValidator.test(myPassword);
+        Assertions.assertTrue(isPasswordValid);
     }
 }
