@@ -13,7 +13,7 @@ class EmailValidatorTest {
 
     @Test
     public void validateEmail() {
-        String myEmail = "Email";
+        String myEmail = "email@com.com";
         boolean isEmailValid = emailValidator.test(myEmail);
         Assertions.assertTrue(isEmailValid);
     }
