@@ -13,7 +13,7 @@ class PasswordValidatorTest {
 
     @Test
     public void validatePassword() {
-        String myPassword = "Email";
+        String myPassword = "Password10!";
         boolean isPasswordValid = passwordValidator.test(myPassword);
         Assertions.assertTrue(isPasswordValid);
     }
