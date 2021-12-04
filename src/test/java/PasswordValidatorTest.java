@@ -13,6 +13,7 @@ class PasswordValidatorTest {
 
     @Test
     public void validatePassword() {
-        //Blank for now
+        String myPassword = "Email";
+        boolean isPasswordValid = passwordValidator.test(myPassword);
     }
 }
