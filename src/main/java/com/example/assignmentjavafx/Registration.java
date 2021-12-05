@@ -5,16 +5,15 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.stage.Window;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Registration extends Application {
-    private final EmailValidator emailValidator = new EmailValidator();
 
     /**
      * This method creates the Stage and Scene that are used as the bottom two layers of the Registration Form.
@@ -74,41 +73,67 @@ public class Registration extends Application {
      */
     private void addUIControls(@NotNull GridPane grid) {
 
+        final EmailValidator emailValidator = new EmailValidator();
+        final PasswordValidator passwordValidator = new PasswordValidator();
+        AtomicBoolean submitSuccessful = new AtomicBoolean(true);
+
         // Header Controls
         Label header = new Label("Registration Form");
         header.setFont(Font.font("Times New Roman", FontWeight.BOLD, 24));
+
+        // Changes the header to white
         header.setStyle("-fx-text-fill: white;");
+
+        header.setUnderline(true);
         grid.add(header, 0,0,2,1);
         GridPane.setHalignment(header, HPos.CENTER);
         GridPane.setMargin(header, new Insets(20, 0,20,0));
 
-        // Email Controls
-        Label emailLabel = new Label("Email: ");
+        // Email Label Control
+        Label emailLabel = new Label("Email:");
         emailLabel.setFont(Font.font("Times New Roman", FontWeight.BOLD, 16));
         emailLabel.setStyle("-fx-text-fill: white;");
+        emailLabel.setUnderline(true);
         grid.add(emailLabel, 0, 1);
 
+        // Password Label Control
+        Label passwordLabel = new Label("Password:");
+        passwordLabel.setFont(Font.font("Times New Roman", FontWeight.BOLD, 16));
+        passwordLabel.setStyle("-fx-text-fill: white;");
+        passwordLabel.setUnderline(true);
+        grid.add(passwordLabel, 0, 3);
+
+        // Email Form Box Control
         TextField emailField = new TextField();
         emailField.setPrefHeight(50);
         grid.add(emailField, 1, 1);
 
-        // Password Controls
-        Label passwordLabel = new Label("Password: ");
-        passwordLabel.setFont(Font.font("Times New Roman", FontWeight.BOLD, 16));
-        passwordLabel.setStyle("-fx-text-fill: white;");
-        grid.add(passwordLabel, 0, 2);
-
+        // Password Form Box Control
         PasswordField passwordField = new PasswordField();
         passwordField.setPrefHeight(50);
-        grid.add(passwordField, 1, 2);
+        grid.add(passwordField, 1, 3);
+
+        // Email Comment Box
+        Label emailComment = new Label();
+        emailComment.setPrefHeight(50);
+        emailComment.setFont(Font.font("Times New Roman", FontWeight.BOLD, 16));
+        emailComment.setStyle("-fx-text-fill: white;");
+        grid.add(emailComment, 1, 2);
+
+        // Password Comment Box
+        Label passwordComment = new Label();
+        passwordComment.setPrefHeight(50);
+        passwordComment.setFont(Font.font("Times New Roman", FontWeight.BOLD, 16));
+        passwordComment.setStyle("-fx-text-fill: white;");
+        grid.add(passwordComment, 1, 4);
 
         // Submit Controls
-        Button submit = new Button("Submit");
-        submit.setPrefHeight(50);
+        Button submit = new Button("Submit Credentials");
         submit.setDefaultButton(true);
         submit.setPrefWidth(100);
+        submit.setPrefHeight(50);
         submit.setFont(Font.font("Times New Roman", FontWeight.BOLD, 16));
-        grid.add(submit, 0, 4, 2, 1);
+        grid.add(submit, 0, 5, 2, 1);
 
         GridPane.setHalignment(submit, HPos.CENTER);
         GridPane.setMargin(submit, new Insets(20, 0,20,0));
@@ -116,34 +141,31 @@ public class Registration extends Application {
         submit.setOnAction(event ->{
 
             if (!emailValidator.test(emailField.getText())) {
-                showRegistrationResults(Alert.AlertType.ERROR, grid.getScene().getWindow(), "Email Error!", "Please Enter a Proper Email!");
+               emailComment.setText("Not Quite. This must be a valid email address!");
+               submitSuccessful.set(false);
             }
             else {
-                showRegistrationResults(Alert.AlertType.CONFIRMATION, grid.getScene().getWindow(), "Registration Complete!", "You have entered valid credentials");
+                emailComment.setText("About Time! This is a valid email address!");
+                submitSuccessful.set(true);
             }
+            if (!passwordValidator.test(passwordField.getText())) {
+                passwordComment.setText("This is not a valid password. You need a minimum of 7 characters" +
+                        ", it must include a digit, a letter\nand a special character from '*^&@!'.");
+                submitSuccessful.set(false);
+            }
+            else {
+                passwordComment.setText("About Time! This is a valid password!");
+                if (submitSuccessful.get()) {
 
+                    Alert myAlert = new Alert(Alert.AlertType.INFORMATION);
+                    myAlert.setTitle("Registration Successful!");
+                    myAlert.setHeaderText(null);
+                    myAlert.setContentText("Your credentials are valid and you have finally registered!");
+                    myAlert.initOwner(grid.getScene().getWindow());
+                    myAlert.show();
+                }
+            }
         });
-    }
-
-    /**
-     * This method is used to create the alert box which will display a comment regarding the user's
-     * registration. Upon clicking the submit button this alert box will appear with appropriate
-     * dialogue set by the alertTitle and message1 parameters.
-     *
-     * @param  alertType   AlertType Object used to create the Alert box.
-     * @param  owner   Window Object that highlights the owner Window for this alert box dialogue.
-     * @param  alertTitle   String Object that specifies the Title for the alert.
-     * @param  message1   String Object that specifies the message for the alert.
-     */
-    private void showRegistrationResults(@NotNull Alert.AlertType alertType, @NotNull Window owner,
-                                         @NotNull String alertTitle, @NotNull String message1) {
-
-        Alert myAlert = new Alert(alertType);
-        myAlert.setTitle(alertTitle);
-        myAlert.setHeaderText(null);
-        myAlert.setContentText(message1);
-        myAlert.initOwner(owner);
-        myAlert.show();
     }
 
     /**
