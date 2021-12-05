@@ -29,6 +29,7 @@ public class Registration extends Application {
 
         GridPane regPane = createRegistrationFormPane();
 
+        // Adds controls to the above GridPane.
         addUIControls(regPane);
         Scene scene1 = new Scene(regPane, 900, 650);
         regPane.setStyle("-fx-background-color: darkred;");
@@ -138,6 +139,7 @@ public class Registration extends Application {
         GridPane.setHalignment(submit, HPos.CENTER);
         GridPane.setMargin(submit, new Insets(20, 0,20,0));
 
+        // Event-Driven, once the submit button is clicked run through this code.
         submit.setOnAction(event ->{
 
             if (!emailValidator.test(emailField.getText())) {
